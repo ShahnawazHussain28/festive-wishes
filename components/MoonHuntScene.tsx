@@ -41,6 +41,165 @@ const Lantern = ({
   </div>
 );
 
+const RubElHizb = ({ className }: { className?: string }) => (
+  <div className={`${className}`}>
+    <svg
+      viewBox="0 0 24 24"
+      className="w-full h-full fill-yellow-500/20 stroke-yellow-500/60 stroke-[1.5]"
+    >
+      <path d="M12 0l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z" />
+      <path
+        d="M12 0l3.5 8.5 8.5 3.5-8.5 3.5-3.5 8.5-3.5-8.5-8.5-3.5 8.5-3.5z"
+        transform="rotate(45 12 12)"
+      />
+    </svg>
+  </div>
+);
+
+const AbstractCalligraphy = () => (
+  <div className="overflow-hidden absolute inset-0 pointer-events-none select-none opacity-[0.12]">
+    <svg
+      viewBox="0 0 400 400"
+      className="w-full h-full fill-yellow-200 stroke-yellow-500"
+    >
+      {/* Background strokes spanning the whole area */}
+      <path
+        d="M0,0 Q100,50 0,150 T0,300"
+        fill="none"
+        strokeWidth="1"
+        opacity="0.3"
+      />
+      <path
+        d="M400,0 Q300,100 400,200 T400,400"
+        fill="none"
+        strokeWidth="1"
+        opacity="0.3"
+      />
+
+      {/* Top Edge & Corners */}
+      <text
+        x="10"
+        y="40"
+        className="font-serif text-5xl opacity-40 fill-yellow-500"
+        style={{ transform: "rotate(-20deg)" }}
+      >
+        ف
+      </text>
+      <text
+        x="180"
+        y="30"
+        className="font-serif text-4xl opacity-20 fill-yellow-500"
+      >
+        ن
+      </text>
+      <text
+        x="350"
+        y="50"
+        className="font-serif text-6xl opacity-50 fill-yellow-500"
+        style={{ transform: "rotate(15deg)" }}
+      >
+        ق
+      </text>
+
+      {/* Left & Right Edges */}
+      <text
+        x="-10"
+        y="200"
+        className="font-serif text-7xl opacity-30 fill-yellow-500"
+        style={{ transform: "rotate(90deg)" }}
+      >
+        ش
+      </text>
+      <text
+        x="370"
+        y="250"
+        className="font-serif text-8xl opacity-20 fill-yellow-500"
+        style={{ transform: "rotate(-45deg)" }}
+      >
+        س
+      </text>
+      <text
+        x="15"
+        y="120"
+        className="font-serif text-4xl opacity-40 fill-yellow-500"
+      >
+        ي
+      </text>
+
+      {/* Bottom Edge & Corners */}
+      <text
+        x="20"
+        y="380"
+        className="font-serif text-6xl opacity-60 fill-yellow-500"
+        style={{ transform: "rotate(-15deg)" }}
+      >
+        ع
+      </text>
+      <text
+        x="200"
+        y="390"
+        className="font-serif text-5xl opacity-30 fill-yellow-500"
+      >
+        ب
+      </text>
+      <text
+        x="340"
+        y="370"
+        className="font-serif text-7xl opacity-40 fill-yellow-500"
+        style={{ transform: "rotate(10deg)" }}
+      >
+        ه
+      </text>
+
+      {/* Scattered Mid-range to fill gaps */}
+      <text
+        x="80"
+        y="80"
+        className="font-serif text-3xl opacity-20 fill-yellow-500"
+      >
+        ك
+      </text>
+      <text
+        x="300"
+        y="150"
+        className="font-serif text-9xl opacity-10 fill-yellow-500"
+        style={{ transform: "rotate(-10deg)" }}
+      >
+        ا
+      </text>
+      <text
+        x="150"
+        y="250"
+        className="font-serif opacity-10 text-[12rem] fill-yellow-500"
+      >
+        و
+      </text>
+      <text
+        x="280"
+        y="280"
+        className="font-serif text-6xl opacity-20 fill-yellow-500"
+        style={{ transform: "rotate(30deg)" }}
+      >
+        ر
+      </text>
+      <text
+        x="100"
+        y="180"
+        className="font-serif text-5xl opacity-30 fill-yellow-500"
+      >
+        م
+      </text>
+      <text
+        x="50"
+        y="300"
+        className="font-serif text-4xl opacity-20 fill-yellow-500"
+      >
+        ل
+      </text>
+    </svg>
+  </div>
+);
+
 export function MoonHuntScene() {
   const [found, setFound] = useState(false);
   const [showCard, setShowCard] = useState(false);
@@ -119,7 +278,8 @@ export function MoonHuntScene() {
                 filter: `blur(${cloud.blur}px)`,
                 transform: `translate(-50%, -50%) rotate(${cloud.rotation}deg)`,
                 zIndex: cloud.zIndex,
-              }}            >
+              }}
+            >
               <Image
                 src={`/${cloud.type}`}
                 alt="Cloud"
@@ -175,13 +335,13 @@ export function MoonHuntScene() {
 
         {/* Moon */}
         <div
-          className="absolute transition-all z-60 duration-[1000ms]"
+          className="absolute transition-all ease-in-out z-60 duration-[1500ms]"
           style={{
-            left: `${scene.moon.x}%`,
-            top: `${scene.moon.y}%`,
+            left: showCard ? "50%" : `${scene.moon.x}%`,
+            top: showCard ? "12%" : `${scene.moon.y}%`,
             width: `${scene.moon.size}px`,
             height: `${scene.moon.size}px`,
-            transform: `translate(-50%, -50%) scale(${found ? 1.25 : 1})`,
+            transform: `translate(-50%, -50%) scale(${found ? 1.2 : 1})`,
           }}
         >
           <button
@@ -212,7 +372,8 @@ export function MoonHuntScene() {
                 filter: found
                   ? "drop-shadow(0 0 20px rgba(255, 215, 0, 0.6))"
                   : "drop-shadow(0 0 8px rgba(255, 255, 255, 0.3))",
-              }}            />
+              }}
+            />
           </button>
         </div>
 
@@ -231,7 +392,7 @@ export function MoonHuntScene() {
           {Array.from({ length: 40 }).map((_, idx) => (
             <div
               key={`sparkle-${idx}`}
-              className="absolute pointer-events-none particle-fall animate-in fade-in duration-1000"
+              className="absolute duration-1000 pointer-events-none particle-fall animate-in fade-in"
               style={{
                 left: `${(idx * 7 + 3) % 100}%`,
                 top: "-20px",
@@ -254,39 +415,43 @@ export function MoonHuntScene() {
             className="fixed top-1/2 left-1/2 w-[90%] max-w-sm select-none pointer-events-auto animate-card-in"
             style={{ transform: "translate(-50%, -50%)" }}
           >
-            <div className="absolute -inset-1 bg-gradient-to-b rounded-[2rem] from-yellow-500/40 via-yellow-500/10 to-yellow-500/40 blur-sm" />
-            <div className="relative rounded-[2rem] border border-yellow-500/30 bg-[#1d123f]/85 p-10 text-center shadow-[0_0_100px_rgba(45,27,77,0.8)] backdrop-blur-2xl">
-              {/* Corner Accents */}
-              <div className="absolute top-4 left-4 w-8 h-8 rounded-tl-xl border-t-2 border-l-2 border-yellow-500/40" />
-              <div className="absolute top-4 right-4 w-8 h-8 rounded-tr-xl border-t-2 border-r-2 border-yellow-500/40" />
-              <div className="absolute bottom-4 left-4 w-8 h-8 rounded-bl-xl border-b-2 border-l-2 border-yellow-500/40" />
-              <div className="absolute right-4 bottom-4 w-8 h-8 rounded-br-xl border-r-2 border-b-2 border-yellow-500/40" />
+            <div className="absolute -inset-1 bg-gradient-to-b from-yellow-500/40 via-yellow-500/10 to-yellow-500/40 blur-sm" />
+            <div className="relative border-2 border-yellow-500/40 bg-[#1d123f]/90 p-8 text-center shadow-[0_0_100px_rgba(45,27,77,0.8)] backdrop-blur-3xl overflow-hidden">
+              <AbstractCalligraphy />
+              {/* Inner thin border */}
+              <div className="absolute inset-2 border pointer-events-none border-yellow-500/20" />
 
-              <p className="mb-6 font-bold uppercase text-[10px] tracking-[0.5em] text-yellow-400/70">
+              {/* Geometric Corner Stars (Rub el Hizb) */}
+              <RubElHizb className="absolute -top-4 -left-4 w-8 h-8" />
+              <RubElHizb className="absolute -top-4 -right-4 w-8 h-8" />
+              <RubElHizb className="absolute -bottom-4 -left-4 w-8 h-8" />
+              <RubElHizb className="absolute -right-4 -bottom-4 w-8 h-8" />
+
+              <p className="mt-1 mb-6 font-bold uppercase text-[10px] tracking-[0.5em] text-yellow-400/70">
                 Chand Raat Greetings
               </p>
 
-              <h2 className="mb-8 font-serif text-5xl font-bold tracking-tight">
-                <span className="text-transparent bg-clip-text bg-gradient-to-b from-yellow-100 via-yellow-200 to-yellow-500 drop-shadow-sm">
+              <h2 className="mb-6 font-serif text-5xl font-bold tracking-tight">
+                <span className="animate-shimmer drop-shadow-sm">
                   Eid Mubarak
                 </span>
               </h2>
 
-              <div className="flex gap-3 justify-center items-center mb-8">
+              <div className="flex gap-3 justify-center items-center mb-6">
                 <div className="w-8 bg-gradient-to-r from-transparent h-[1px] to-yellow-500/40" />
                 <div className="w-1.5 h-1.5 border rotate-45 border-yellow-500/40" />
                 <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
               </div>
 
-              <p className="font-serif text-lg italic leading-relaxed text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500">
+              <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
                 &ldquo;May the light of the crescent moon guide you toward
                 peace, prosperity, and endless joy.&rdquo;
               </p>
 
-              <div className="pt-6 mt-10 border-t border-white/5">
+              <div className="pt-5 mt-8 border-t border-white/5">
                 <button
                   onClick={() => window.location.reload()}
-                  className="py-2 px-6 text-xs tracking-widest text-yellow-200 uppercase rounded-full border transition-colors border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20"
+                  className="py-2.5 px-8 text-xs tracking-widest text-yellow-200 uppercase rounded-full border transition-colors border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20"
                 >
                   Share the Joy
                 </button>
