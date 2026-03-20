@@ -317,7 +317,7 @@ function MoonHuntContent() {
 
         {/* Moon */}
         <div
-          className="absolute transition-all z-60 duration-[1500ms] ease-in-out"
+          className="absolute transition-all ease-in-out z-60 duration-[1500ms]"
           style={{
             left: showCard ? "50%" : `${scene.moon.x}%`,
             top: showCard ? "8%" : `${scene.moon.y}%`,
@@ -374,7 +374,7 @@ function MoonHuntContent() {
           {Array.from({ length: 40 }).map((_, idx) => (
             <div
               key={`sparkle-${idx}`}
-              className="absolute pointer-events-none particle-fall animate-in fade-in duration-1000"
+              className="absolute duration-1000 pointer-events-none particle-fall animate-in fade-in"
               style={{
                 left: `${(idx * 7 + 3) % 100}%`,
                 top: "-20px",
@@ -400,23 +400,29 @@ function MoonHuntContent() {
             <div className="absolute -inset-1 bg-gradient-to-b from-yellow-500/40 via-yellow-500/10 to-yellow-500/40 blur-sm" />
             <div className="relative border-2 border-yellow-500/40 bg-[#1d123f]/90 p-9 text-center shadow-[0_0_100px_rgba(45,27,77,0.8)] backdrop-blur-3xl overflow-hidden">
               <AbstractCalligraphy />
+
+              {/* Card Shine Sweep */}
+              <div className="overflow-hidden absolute inset-0 z-10 pointer-events-none">
+                <div className="absolute top-[-100%] left-0 w-full h-[300%] bg-gradient-to-r from-transparent via-white/10 to-transparent animate-card-shine" />
+              </div>
+
               {/* Inner thin border */}
-              <div className="absolute inset-2 border border-yellow-500/20 pointer-events-none" />
+              <div className="absolute inset-2 border pointer-events-none border-yellow-500/20" />
 
               {/* Geometric Corner Stars (Rub el Hizb) */}
               <RubElHizb className="absolute -top-4 -left-4 w-8 h-8" />
               <RubElHizb className="absolute -top-4 -right-4 w-8 h-8" />
               <RubElHizb className="absolute -bottom-4 -left-4 w-8 h-8" />
-              <RubElHizb className="absolute -bottom-4 -right-4 w-8 h-8" />
+              <RubElHizb className="absolute -right-4 -bottom-4 w-8 h-8" />
 
-              <h2 className="mb-6 mt-4 font-serif text-5xl font-bold tracking-tight">
+              <h2 className="mt-4 mb-6 font-serif text-5xl font-bold tracking-tight">
                 <span className="animate-shimmer drop-shadow-sm">
                   Eid Mubarak
                 </span>
               </h2>
 
               {fromName && !isGeneratorMode && (
-                <p className="mb-6 font-serif text-xl text-yellow-200/90 italic">
+                <p className="mb-6 font-serif text-xl italic text-yellow-200/90">
                   from {fromName}
                 </p>
               )}
@@ -429,7 +435,7 @@ function MoonHuntContent() {
                     <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
                   </div>
 
-                  <p className="font-serif text-lg italic leading-relaxed text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500 px-2">
+                  <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
                     &ldquo;May the light of the crescent moon guide you toward
                     peace, prosperity, and endless joy.&rdquo;
                   </p>
@@ -437,14 +443,14 @@ function MoonHuntContent() {
                   <div className="pt-5 mt-8 border-t border-white/5">
                     <button
                       onClick={() => setIsGeneratorMode(true)}
-                      className="relative py-2.5 px-8 text-xs font-bold tracking-wide text-indigo-950 uppercase transition-all overflow-hidden animate-button-glow group active:scale-95 rounded-md"
+                      className="overflow-hidden relative py-2.5 px-8 text-base font-bold tracking-wide uppercase rounded-md transition-all active:scale-95 text-indigo-950 animate-button-glow group"
                     >
                       {/* Metallic Background Gradient */}
                       <div className="absolute inset-0 bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728]" />
-                      
+
                       {/* Shine Sweep Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent transition-transform duration-1000 -translate-x-full group-hover:translate-x-full via-white/40" />
+
                       <span className="relative z-10 drop-shadow-sm">
                         Wish Your Loved Ones
                       </span>
@@ -452,9 +458,9 @@ function MoonHuntContent() {
                   </div>
                 </>
               ) : (
-                <div className="mt-4 space-y-6 animate-in fade-in zoom-in duration-500">
+                <div className="mt-4 space-y-6 duration-500 animate-in fade-in zoom-in">
                   <div className="space-y-2">
-                    <label className="text-[10px] uppercase tracking-widest text-yellow-400/60 block">
+                    <label className="block tracking-widest uppercase text-[10px] text-yellow-400/60">
                       Enter Your Name
                     </label>
                     <input
@@ -463,7 +469,7 @@ function MoonHuntContent() {
                       value={creatorName}
                       onChange={(e) => setCreatorName(e.target.value)}
                       placeholder="e.g. Zayan"
-                      className="w-full bg-white/5 border border-yellow-500/30 rounded-lg py-3 px-4 text-yellow-100 placeholder:text-yellow-100/20 focus:outline-none focus:border-yellow-500/60 transition-colors"
+                      className="py-3 px-4 w-full text-yellow-100 rounded-lg border transition-colors focus:outline-none bg-white/5 border-yellow-500/30 placeholder:text-yellow-100/20 focus:border-yellow-500/60"
                     />
                   </div>
 
@@ -471,21 +477,21 @@ function MoonHuntContent() {
                     <button
                       onClick={handleShare}
                       disabled={!creatorName}
-                      className="relative py-3 px-8 text-xs font-bold tracking-wide text-indigo-950 uppercase transition-all overflow-hidden disabled:opacity-50 disabled:grayscale animate-button-glow group active:scale-95 rounded-md"
+                      className="overflow-hidden relative py-3 px-8 text-base font-bold tracking-wide uppercase rounded-md transition-all active:scale-95 disabled:opacity-50 text-indigo-950 animate-button-glow group disabled:grayscale"
                     >
                       {/* Metallic Background Gradient */}
                       <div className="absolute inset-0 bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728]" />
-                      
+
                       {/* Shine Sweep Effect */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
-                      
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent to-transparent transition-transform duration-1000 -translate-x-full group-hover:translate-x-full via-white/40" />
+
                       <span className="relative z-10 drop-shadow-sm">
                         {copied ? "Link Copied!" : "Send the Joy"}
                       </span>
                     </button>
                     <button
                       onClick={() => setIsGeneratorMode(false)}
-                      className="text-yellow-400/60 text-[10px] uppercase tracking-widest hover:text-yellow-400 transition-colors"
+                      className="text-sm tracking-widest uppercase transition-colors hover:text-yellow-400 text-yellow-400/60"
                     >
                       Go Back
                     </button>

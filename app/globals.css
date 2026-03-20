@@ -148,6 +148,15 @@ body {
   animation: button-glow 2s ease-in-out infinite;
 }
 
+@keyframes card-shine {
+  0% { transform: translateX(-300%) rotate(45deg); }
+  15%, 100% { transform: translateX(300%) rotate(45deg); }
+}
+
+.animate-card-shine {
+  animation: card-shine 10s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
 @keyframes float {
   0%,
   100% {
