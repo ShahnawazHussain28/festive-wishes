@@ -3,6 +3,7 @@
 import { useMemo, useState, useEffect, CSSProperties, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { generateSkyScene } from "@/lib/sky";
+import { EID_QUOTES } from "@/lib/quotes";
 import Image from "next/image";
 
 const MosqueForeground = () => (
@@ -156,6 +157,7 @@ function MoonHuntContent() {
   const [showCard, setShowCard] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [movedClouds, setMovedClouds] = useState<string[]>([]);
+  const [selectedQuote, setSelectedQuote] = useState("");
 
   // Generator states
   const [isGeneratorMode, setIsGeneratorMode] = useState(false);
@@ -167,6 +169,12 @@ function MoonHuntContent() {
       setIsDesktop(window.innerWidth > 768);
     };
     checkIsDesktop();
+
+    (() => {
+      const randomQuote =
+        EID_QUOTES[Math.floor(Math.random() * EID_QUOTES.length)];
+      setSelectedQuote(randomQuote);
+    })();
     window.addEventListener("resize", checkIsDesktop);
     return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
@@ -362,7 +370,7 @@ function MoonHuntContent() {
         {!found && (
           <div className="absolute inset-x-0 top-12 z-40 px-6 text-center animate-pulse pointer-events-none">
             <p className="text-sm font-medium uppercase tracking-[0.4em] text-yellow-100/40 drop-shadow-xl">
-              Spot the crescent moon
+              Find the Moon
             </p>
           </div>
         )}
@@ -436,8 +444,7 @@ function MoonHuntContent() {
                   </div>
 
                   <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
-                    &ldquo;May the light of the crescent moon guide you toward
-                    peace, prosperity, and endless joy.&rdquo;
+                    &ldquo;{selectedQuote}&rdquo;
                   </p>
 
                   <div className="pt-5 mt-8 border-t border-white/5">
