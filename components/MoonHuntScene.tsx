@@ -87,16 +87,15 @@ export function MoonHuntScene() {
   return (
     <>
       <main
-        className={`relative h-dvh w-full overflow-hidden text-white transition-all duration-[2000ms] ease-in-out ${
+        className={`relative h-dvh w-full overflow-hidden text-white transition-colors duration-[2000ms] ease-in-out ${
           found ? "bg-[#130b2f]" : "bg-[#090b1e]"
         }`}
       >
         {/* Background Nebulas */}
-        <div className="absolute inset-0 z-0 transition-opacity duration-[2000ms]">
+        <div className="absolute inset-0 z-0">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_60%,_rgba(255,105,180,0.12)_0%,_transparent_60%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_20%,_rgba(255,165,0,0.15)_0%,_transparent_50%)]" />
         </div>
-
         {scene.clouds.map((cloud) => {
           const isMoved = movedClouds.includes(cloud.id);
           const moveOffset = cloud.moveDirection === "left" ? -150 : 150;
@@ -118,10 +117,9 @@ export function MoonHuntScene() {
                 height: `${cloud.height}px`,
                 opacity: isMoved ? 0 : found ? 0.1 : cloud.opacity,
                 filter: `blur(${cloud.blur}px)`,
-                transform: `translate(-50%, -50%) rotate(${cloud.rotation}deg) scale(${found ? 1.2 : 1})`,
+                transform: `translate(-50%, -50%) rotate(${cloud.rotation}deg)`,
                 zIndex: cloud.zIndex,
-              }}
-            >
+              }}            >
               <Image
                 src={`/${cloud.type}`}
                 alt="Cloud"
@@ -209,13 +207,12 @@ export function MoonHuntScene() {
               width={100}
               height={100}
               draggable={false}
-              className={`relative w-full h-full object-contain transition-all duration-1000 select-none ${found ? "animate-glow-pulse" : ""}`}
+              className={`relative w-full h-full object-contain transition-all duration-1000 select-none`}
               style={{
                 filter: found
-                  ? ""
-                  : "drop-shadow(0 0 10px rgba(255, 255, 255, 0.4)) drop-shadow(0 0 20px rgba(255, 215, 0, 0.2))",
-              }}
-            />
+                  ? "drop-shadow(0 0 20px rgba(255, 215, 0, 0.6))"
+                  : "drop-shadow(0 0 8px rgba(255, 255, 255, 0.3))",
+              }}            />
           </button>
         </div>
 
