@@ -26,7 +26,8 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "A Magical Wish for You ✨",
-    description: "Open to reveal a special Eid experience curated just for you.",
+    description:
+      "Open to reveal a special Eid experience curated just for you.",
     url: "https://eid-moon-hunt.vercel.app",
     siteName: "Eid Moon Hunt",
     images: [
@@ -59,10 +60,8 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
-        <Script
-          src="https://pl28951970.profitablecpmratenetwork.com/ba/ca/15/baca15a5ba7b74f25c56b442bba53256.js"
-          strategy="afterInteractive"
-        />
+        {/* Social Bar Ad */}
+        <Script src="https://pl28952020.profitablecpmratenetwork.com/61/cb/a1/61cba19e67bd635fea1adc6fa9cff5cf.js" />
       </head>
       <body className="flex flex-col min-h-full">{children}</body>
     </html>

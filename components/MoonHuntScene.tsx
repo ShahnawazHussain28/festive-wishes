@@ -6,6 +6,56 @@ import { generateSkyScene } from "@/lib/sky";
 import { EID_QUOTES } from "@/lib/quotes";
 import Image from "next/image";
 
+// Reusable Adsterra Banner component
+const AdsterraBanner = ({
+  id,
+  width,
+  height,
+  adKey,
+  className = "",
+}: {
+  id: string;
+  width: number;
+  height: number;
+  adKey: string;
+  className?: string;
+}) => {
+  useEffect(() => {
+    const container = document.getElementById(id);
+    if (!container || !adKey) return;
+
+    // Clear previous ad if any to prevent duplicates during re-renders
+    container.innerHTML = "";
+
+    const confScript = document.createElement("script");
+    confScript.type = "text/javascript";
+    confScript.innerHTML = `
+      atOptions = {
+        'key' : '${adKey}',
+        'format' : 'iframe',
+        'height' : ${height},
+        'width' : ${width},
+        'params' : {}
+      };
+    `;
+
+    const invokeScript = document.createElement("script");
+    invokeScript.type = "text/javascript";
+    invokeScript.src = `//www.highperformanceformat.com/${adKey}/invoke.js`;
+
+    container.appendChild(confScript);
+    container.appendChild(invokeScript);
+  }, [id, adKey, height, width]);
+
+  return (
+    <div
+      id={id}
+      className={`flex items-center justify-center overflow-hidden bg-white/5 ${className}`}
+      style={{ minWidth: width, minHeight: height }}
+    />
+  );
+};
+
 const MosqueForeground = () => (
   <div className="absolute bottom-0 z-30 w-full pointer-events-none">
     <Image
@@ -325,7 +375,7 @@ function MoonHuntContent() {
 
         {/* Moon */}
         <div
-          className="absolute transition-all ease-in-out z-60 duration-[1500ms]"
+          className="absolute transition-all z-60 duration-[1500ms] ease-in-out"
           style={{
             left: showCard ? "50%" : `${scene.moon.x}%`,
             top: showCard ? "8%" : `${scene.moon.y}%`,
@@ -374,6 +424,17 @@ function MoonHuntContent() {
             </p>
           </div>
         )}
+
+        {/* Sticky Footer Ad Slot (320x50) */}
+        <div className="fixed bottom-0 left-0 right-0 z-[100] bg-black/20 backdrop-blur-sm pt-1">
+          <AdsterraBanner
+            id="adsterra-footer"
+            width={320}
+            height={50}
+            adKey="2d227b58944051bf988dbae22e76c359"
+            className="mx-auto"
+          />
+        </div>
       </main>
 
       {showCard && (
@@ -421,7 +482,7 @@ function MoonHuntContent() {
               <RubElHizb className="absolute -top-4 -left-4 w-8 h-8" />
               <RubElHizb className="absolute -top-4 -right-4 w-8 h-8" />
               <RubElHizb className="absolute -bottom-4 -left-4 w-8 h-8" />
-              <RubElHizb className="absolute -right-4 -bottom-4 w-8 h-8" />
+              <RubElHizb className="absolute -bottom-4 -right-4 w-8 h-8" />
 
               <h2 className="mt-4 mb-6 font-serif text-5xl font-bold tracking-tight">
                 <span className="animate-shimmer drop-shadow-sm">
@@ -443,7 +504,7 @@ function MoonHuntContent() {
                     <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
                   </div>
 
-                  <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
+                  <p className="px-2 font-serif text-lg italic leading-relaxed text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500">
                     &ldquo;{selectedQuote}&rdquo;
                   </p>
 
@@ -466,7 +527,16 @@ function MoonHuntContent() {
                 </>
               ) : (
                 <div className="mt-4 space-y-6 duration-500 animate-in fade-in zoom-in">
-                  <div className="space-y-2">
+                  {/* High CPM Adsterra Banner Slot (300x250) */}
+                  <AdsterraBanner
+                    id="adsterra-generator"
+                    width={300}
+                    height={250}
+                    adKey="022f190fdea0e9a0f49dcfc878dc3c51"
+                    className="mx-auto rounded-lg border shadow-lg border-yellow-500/20"
+                  />
+
+                  <div className="space-y-2 text-left">
                     <label className="block tracking-widest uppercase text-[10px] text-yellow-400/60">
                       Enter Your Name
                     </label>
