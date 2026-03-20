@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState, useEffect, CSSProperties } from "react";
+import { useMemo, useState, useEffect, CSSProperties, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import { generateSkyScene } from "@/lib/sky";
 import Image from "next/image";
 
@@ -62,7 +63,6 @@ const AbstractCalligraphy = () => (
       viewBox="0 0 400 400"
       className="w-full h-full fill-yellow-200 stroke-yellow-500"
     >
-      {/* Background strokes spanning the whole area */}
       <path
         d="M0,0 Q100,50 0,150 T0,300"
         fill="none"
@@ -75,8 +75,6 @@ const AbstractCalligraphy = () => (
         strokeWidth="1"
         opacity="0.3"
       />
-
-      {/* Top Edge & Corners */}
       <text
         x="10"
         y="40"
@@ -100,8 +98,6 @@ const AbstractCalligraphy = () => (
       >
         ق
       </text>
-
-      {/* Left & Right Edges */}
       <text
         x="-10"
         y="200"
@@ -125,8 +121,6 @@ const AbstractCalligraphy = () => (
       >
         ي
       </text>
-
-      {/* Bottom Edge & Corners */}
       <text
         x="20"
         y="380"
@@ -150,61 +144,23 @@ const AbstractCalligraphy = () => (
       >
         ه
       </text>
-
-      {/* Scattered Mid-range to fill gaps */}
-      <text
-        x="80"
-        y="80"
-        className="font-serif text-3xl opacity-20 fill-yellow-500"
-      >
-        ك
-      </text>
-      <text
-        x="300"
-        y="150"
-        className="font-serif text-9xl opacity-10 fill-yellow-500"
-        style={{ transform: "rotate(-10deg)" }}
-      >
-        ا
-      </text>
-      <text
-        x="150"
-        y="250"
-        className="font-serif opacity-10 text-[12rem] fill-yellow-500"
-      >
-        و
-      </text>
-      <text
-        x="280"
-        y="280"
-        className="font-serif text-6xl opacity-20 fill-yellow-500"
-        style={{ transform: "rotate(30deg)" }}
-      >
-        ر
-      </text>
-      <text
-        x="100"
-        y="180"
-        className="font-serif text-5xl opacity-30 fill-yellow-500"
-      >
-        م
-      </text>
-      <text
-        x="50"
-        y="300"
-        className="font-serif text-4xl opacity-20 fill-yellow-500"
-      >
-        ل
-      </text>
     </svg>
   </div>
 );
 
-export function MoonHuntScene() {
+function MoonHuntContent() {
+  const searchParams = useSearchParams();
+  const fromName = searchParams.get("from");
+
   const [found, setFound] = useState(false);
   const [showCard, setShowCard] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
   const [movedClouds, setMovedClouds] = useState<string[]>([]);
+
+  // Generator states
+  const [isGeneratorMode, setIsGeneratorMode] = useState(false);
+  const [creatorName, setCreatorName] = useState("");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     const checkIsDesktop = () => {
@@ -215,15 +171,40 @@ export function MoonHuntScene() {
     return () => window.removeEventListener("resize", checkIsDesktop);
   }, []);
 
-  // Trigger card delay when found
   useEffect(() => {
     if (found) {
-      const timer = setTimeout(() => setShowCard(true), 1000);
+      const timer = setTimeout(() => setShowCard(true), 1500);
       return () => clearTimeout(timer);
     }
   }, [found]);
 
   const scene = useMemo(() => generateSkyScene(), []);
+
+  const handleShare = () => {
+    const url = new URL(window.location.origin);
+    if (creatorName) {
+      url.searchParams.set("from", creatorName);
+    }
+    const finalUrl = url.toString();
+
+    if (navigator.share) {
+      navigator
+        .share({
+          title: "Eid Moon Hunt",
+          text: `Check out this Eid wish from ${creatorName || "someone special"}! ✨`,
+          url: finalUrl,
+        })
+        .catch(() => {
+          navigator.clipboard.writeText(finalUrl);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 2000);
+        });
+    } else {
+      navigator.clipboard.writeText(finalUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    }
+  };
 
   if (isDesktop) {
     return (
@@ -246,15 +227,16 @@ export function MoonHuntScene() {
   return (
     <>
       <main
-        className={`relative h-dvh w-full overflow-hidden text-white transition-colors duration-[2000ms] ease-in-out ${
+        className={`relative h-dvh w-full overflow-hidden text-white transition-all duration-[2000ms] ease-in-out ${
           found ? "bg-[#130b2f]" : "bg-[#090b1e]"
         }`}
       >
         {/* Background Nebulas */}
-        <div className="absolute inset-0 z-0">
+        <div className="absolute inset-0 z-0 transition-opacity duration-[2000ms]">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_70%_60%,_rgba(255,105,180,0.12)_0%,_transparent_60%)]" />
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_50%_20%,_rgba(255,165,0,0.15)_0%,_transparent_50%)]" />
         </div>
+
         {scene.clouds.map((cloud) => {
           const isMoved = movedClouds.includes(cloud.id);
           const moveOffset = cloud.moveDirection === "left" ? -150 : 150;
@@ -276,7 +258,7 @@ export function MoonHuntScene() {
                 height: `${cloud.height}px`,
                 opacity: isMoved ? 0 : found ? 0.1 : cloud.opacity,
                 filter: `blur(${cloud.blur}px)`,
-                transform: `translate(-50%, -50%) rotate(${cloud.rotation}deg)`,
+                transform: `translate(-50%, -50%) rotate(${cloud.rotation}deg) scale(${found ? 1.2 : 1})`,
                 zIndex: cloud.zIndex,
               }}
             >
@@ -335,10 +317,10 @@ export function MoonHuntScene() {
 
         {/* Moon */}
         <div
-          className="absolute transition-all ease-in-out z-60 duration-[1500ms]"
+          className="absolute transition-all z-60 duration-[1500ms] ease-in-out"
           style={{
             left: showCard ? "50%" : `${scene.moon.x}%`,
-            top: showCard ? "12%" : `${scene.moon.y}%`,
+            top: showCard ? "8%" : `${scene.moon.y}%`,
             width: `${scene.moon.size}px`,
             height: `${scene.moon.size}px`,
             transform: `translate(-50%, -50%) scale(${found ? 1.2 : 1})`,
@@ -392,7 +374,7 @@ export function MoonHuntScene() {
           {Array.from({ length: 40 }).map((_, idx) => (
             <div
               key={`sparkle-${idx}`}
-              className="absolute duration-1000 pointer-events-none particle-fall animate-in fade-in"
+              className="absolute pointer-events-none particle-fall animate-in fade-in duration-1000"
               style={{
                 left: `${(idx * 7 + 3) % 100}%`,
                 top: "-20px",
@@ -416,50 +398,112 @@ export function MoonHuntScene() {
             style={{ transform: "translate(-50%, -50%)" }}
           >
             <div className="absolute -inset-1 bg-gradient-to-b from-yellow-500/40 via-yellow-500/10 to-yellow-500/40 blur-sm" />
-            <div className="relative border-2 border-yellow-500/40 bg-[#1d123f]/90 p-8 text-center shadow-[0_0_100px_rgba(45,27,77,0.8)] backdrop-blur-3xl overflow-hidden">
+            <div className="relative border-2 border-yellow-500/40 bg-[#1d123f]/90 p-9 text-center shadow-[0_0_100px_rgba(45,27,77,0.8)] backdrop-blur-3xl overflow-hidden">
               <AbstractCalligraphy />
               {/* Inner thin border */}
-              <div className="absolute inset-2 border pointer-events-none border-yellow-500/20" />
+              <div className="absolute inset-2 border border-yellow-500/20 pointer-events-none" />
 
               {/* Geometric Corner Stars (Rub el Hizb) */}
               <RubElHizb className="absolute -top-4 -left-4 w-8 h-8" />
               <RubElHizb className="absolute -top-4 -right-4 w-8 h-8" />
               <RubElHizb className="absolute -bottom-4 -left-4 w-8 h-8" />
-              <RubElHizb className="absolute -right-4 -bottom-4 w-8 h-8" />
+              <RubElHizb className="absolute -bottom-4 -right-4 w-8 h-8" />
 
-              <p className="mt-1 mb-6 font-bold uppercase text-[10px] tracking-[0.5em] text-yellow-400/70">
-                Chand Raat Greetings
-              </p>
-
-              <h2 className="mb-6 font-serif text-5xl font-bold tracking-tight">
+              <h2 className="mb-6 mt-4 font-serif text-5xl font-bold tracking-tight">
                 <span className="animate-shimmer drop-shadow-sm">
                   Eid Mubarak
                 </span>
               </h2>
 
-              <div className="flex gap-3 justify-center items-center mb-6">
-                <div className="w-8 bg-gradient-to-r from-transparent h-[1px] to-yellow-500/40" />
-                <div className="w-1.5 h-1.5 border rotate-45 border-yellow-500/40" />
-                <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
-              </div>
+              {fromName && !isGeneratorMode && (
+                <p className="mb-6 font-serif text-xl text-yellow-200/90 italic">
+                  from {fromName}
+                </p>
+              )}
 
-              <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
-                &ldquo;May the light of the crescent moon guide you toward
-                peace, prosperity, and endless joy.&rdquo;
-              </p>
+              {!isGeneratorMode ? (
+                <>
+                  <div className="flex gap-3 justify-center items-center mb-6">
+                    <div className="w-8 bg-gradient-to-r from-transparent h-[1px] to-yellow-500/40" />
+                    <div className="w-1.5 h-1.5 border rotate-45 border-yellow-500/40" />
+                    <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
+                  </div>
 
-              <div className="pt-5 mt-8 border-t border-white/5">
-                <button
-                  onClick={() => window.location.reload()}
-                  className="py-2.5 px-8 text-xs tracking-widest text-yellow-200 uppercase rounded-full border transition-colors border-yellow-500/30 bg-yellow-500/10 hover:bg-yellow-500/20"
-                >
-                  Share the Joy
-                </button>
-              </div>
+                  <p className="font-serif text-lg italic leading-relaxed text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500 px-2">
+                    &ldquo;May the light of the crescent moon guide you toward
+                    peace, prosperity, and endless joy.&rdquo;
+                  </p>
+
+                  <div className="pt-5 mt-8 border-t border-white/5">
+                    <button
+                      onClick={() => setIsGeneratorMode(true)}
+                      className="relative py-2.5 px-8 text-xs font-bold tracking-wide text-indigo-950 uppercase transition-all overflow-hidden animate-button-glow group active:scale-95 rounded-md"
+                    >
+                      {/* Metallic Background Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728]" />
+                      
+                      {/* Shine Sweep Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      
+                      <span className="relative z-10 drop-shadow-sm">
+                        Wish Your Loved Ones
+                      </span>
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="mt-4 space-y-6 animate-in fade-in zoom-in duration-500">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-yellow-400/60 block">
+                      Enter Your Name
+                    </label>
+                    <input
+                      autoFocus
+                      type="text"
+                      value={creatorName}
+                      onChange={(e) => setCreatorName(e.target.value)}
+                      placeholder="e.g. Zayan"
+                      className="w-full bg-white/5 border border-yellow-500/30 rounded-lg py-3 px-4 text-yellow-100 placeholder:text-yellow-100/20 focus:outline-none focus:border-yellow-500/60 transition-colors"
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-3">
+                    <button
+                      onClick={handleShare}
+                      disabled={!creatorName}
+                      className="relative py-3 px-8 text-xs font-bold tracking-wide text-indigo-950 uppercase transition-all overflow-hidden disabled:opacity-50 disabled:grayscale animate-button-glow group active:scale-95 rounded-md"
+                    >
+                      {/* Metallic Background Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-br from-[#bf953f] via-[#fcf6ba] to-[#b38728]" />
+                      
+                      {/* Shine Sweep Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
+                      
+                      <span className="relative z-10 drop-shadow-sm">
+                        {copied ? "Link Copied!" : "Send the Joy"}
+                      </span>
+                    </button>
+                    <button
+                      onClick={() => setIsGeneratorMode(false)}
+                      className="text-yellow-400/60 text-[10px] uppercase tracking-widest hover:text-yellow-400 transition-colors"
+                    >
+                      Go Back
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
       )}
     </>
+  );
+}
+
+export function MoonHuntScene() {
+  return (
+    <Suspense fallback={null}>
+      <MoonHuntContent />
+    </Suspense>
   );
 }
