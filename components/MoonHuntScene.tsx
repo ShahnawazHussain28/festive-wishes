@@ -375,7 +375,7 @@ function MoonHuntContent() {
 
         {/* Moon */}
         <div
-          className="absolute transition-all z-60 duration-[1500ms] ease-in-out"
+          className="absolute transition-all ease-in-out z-60 duration-[1500ms]"
           style={{
             left: showCard ? "50%" : `${scene.moon.x}%`,
             top: showCard ? "8%" : `${scene.moon.y}%`,
@@ -426,7 +426,7 @@ function MoonHuntContent() {
         )}
 
         {/* Sticky Footer Ad Slot (320x50) */}
-        <div className="fixed bottom-0 left-0 right-0 z-[100] bg-black/20 backdrop-blur-sm pt-1">
+        <div className="fixed right-0 bottom-0 left-0 pt-1 z-[100] bg-black/20 backdrop-blur-sm">
           <AdsterraBanner
             id="adsterra-footer"
             width={320}
@@ -482,7 +482,7 @@ function MoonHuntContent() {
               <RubElHizb className="absolute -top-4 -left-4 w-8 h-8" />
               <RubElHizb className="absolute -top-4 -right-4 w-8 h-8" />
               <RubElHizb className="absolute -bottom-4 -left-4 w-8 h-8" />
-              <RubElHizb className="absolute -bottom-4 -right-4 w-8 h-8" />
+              <RubElHizb className="absolute -right-4 -bottom-4 w-8 h-8" />
 
               <h2 className="mt-4 mb-6 font-serif text-5xl font-bold tracking-tight">
                 <span className="animate-shimmer drop-shadow-sm">
@@ -504,11 +504,22 @@ function MoonHuntContent() {
                     <div className="w-8 bg-gradient-to-l from-transparent h-[1px] to-yellow-500/40" />
                   </div>
 
-                  <p className="px-2 font-serif text-lg italic leading-relaxed text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2 duration-1000 delay-500">
+                  <p className="px-2 font-serif text-lg italic leading-relaxed duration-1000 delay-500 text-yellow-50/90 animate-in fade-in slide-in-from-bottom-2">
                     &ldquo;{selectedQuote}&rdquo;
                   </p>
 
-                  <div className="pt-5 mt-8 border-t border-white/5">
+                  {/* Greeting View Ad Slot (320x50) */}
+                  <div className="mt-6 mx-[-2.25rem]">
+                    <AdsterraBanner
+                      id="adsterra-greeting-view"
+                      width={320}
+                      height={50}
+                      adKey="2d227b58944051bf988dbae22e76c359"
+                      className="mx-auto"
+                    />
+                  </div>
+
+                  <div className="pt-5 mt-2 border-t border-white/5">
                     <button
                       onClick={() => setIsGeneratorMode(true)}
                       className="overflow-hidden relative py-2.5 px-8 text-base font-bold tracking-wide uppercase rounded-md transition-all active:scale-95 text-indigo-950 animate-button-glow group"
@@ -528,13 +539,6 @@ function MoonHuntContent() {
               ) : (
                 <div className="mt-4 space-y-6 duration-500 animate-in fade-in zoom-in">
                   {/* High CPM Adsterra Banner Slot (300x250) */}
-                  <AdsterraBanner
-                    id="adsterra-generator"
-                    width={300}
-                    height={250}
-                    adKey="022f190fdea0e9a0f49dcfc878dc3c51"
-                    className="mx-auto rounded-lg border shadow-lg border-yellow-500/20"
-                  />
 
                   <div className="space-y-2 text-left">
                     <label className="block tracking-widest uppercase text-[10px] text-yellow-400/60">
@@ -566,6 +570,15 @@ function MoonHuntContent() {
                         {copied ? "Link Copied!" : "Send the Joy"}
                       </span>
                     </button>
+                    <div className="mb-4 mx-[-2.25rem]">
+                      <AdsterraBanner
+                        id="adsterra-generator"
+                        width={300}
+                        height={250}
+                        adKey="022f190fdea0e9a0f49dcfc878dc3c51"
+                        className="mx-auto rounded-lg border shadow-lg border-yellow-500/20"
+                      />
+                    </div>
                     <button
                       onClick={() => setIsGeneratorMode(false)}
                       className="text-sm tracking-widest uppercase transition-colors hover:text-yellow-400 text-yellow-400/60"
